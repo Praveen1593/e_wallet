@@ -18,14 +18,42 @@ class CreditCardPageState extends State<CreditCardPage> {
   String cvvCode = '';
   bool isCvvFocused = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  DateTime selectedDate = DateTime.now();
+  _buildMaterialDatePicker(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+      initialEntryMode: DatePickerEntryMode.calendar,
+      initialDatePickerMode: DatePickerMode.day,
+      helpText: 'Choose date',
+      cancelText: 'Cancel',
+      confirmText: 'Save',
+      errorFormatText: 'Invalid date format',
+      errorInvalidText: 'Invalid date format',
+      fieldLabelText: 'Start date',
+      fieldHintText: 'Year/Month/Date',
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark(),
+          child: child,
+        );
+      },
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      backgroundColor: Colors.teal[50],
+      backgroundColor: Colors.red[50],
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Flutter Credit Card View Demo'),
+        title: Text(''),
       ),
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -60,7 +88,9 @@ class CreditCardPageState extends State<CreditCardPage> {
                         labelText: 'Expired Date',
                         hintText: 'XX/XX',
 
+
                       ),
+
                       cvvCodeDecoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'CVV',
@@ -95,7 +125,28 @@ class CreditCardPageState extends State<CreditCardPage> {
                           print('invalid!');
                         }
                       },
-                    )
+                    ),
+                    SizedBox(height: 20,),
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.all(8),
+                        child: const Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      color: const Color(0xff1b447b),
+                      onPressed: () {
+                        CreditCardForm();
+
+                      },
+                    ),
                   ],
                 ),
               ),
